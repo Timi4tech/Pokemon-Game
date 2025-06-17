@@ -1,0 +1,66 @@
+.cards{
+    display:inline-block;
+    justify-content: space-around;
+    margin: auto;
+}
+.item {
+  display: block;
+  text-align: center;
+  border: 1px solid #FFD700;
+  width: 180px;
+  padding: 0px,5px;
+  height:180px;
+  margin: 6px;
+  border-radius: 10px;
+  color: #FFD700;
+  
+}
+.item img  {
+    height: 50px;
+    width: 50px;
+}
+
+
+#score{
+    display: inline-flex;
+    justify-content: space-between;
+    width: 350px;
+    margin: 12px;
+    padding:10px;
+    height: 150px;
+    color: #FFD700;
+
+}
+
+#picked{
+    background-color:#808080 ;
+    color: #000;
+}
+
+#cardchoices{
+    display: inline-flex;
+}
+.body{
+    display: block;
+    margin: auto;
+}
+body{
+    display: block;
+    background-color: black;
+}
+.header{
+    background-color: #FFD700;
+    justify-content: flex-start;
+    width: fit-content;
+    padding: 5px;
+    z-index: 1000;
+    position: fixed;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+button{
+    background-color: #FFD700;
+    font-weight: bolder;
+    border-color: black;
+}
