@@ -64,3 +64,11 @@ button{
     font-weight: bolder;
     border-color: black;
 }
+#message{
+    z-index: 1000;
+    margin:auto;
+    height: fit-content;
+}
+.group{
+    height: 200px;
+}

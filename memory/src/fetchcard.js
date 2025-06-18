@@ -11,7 +11,8 @@ function Fetchcard() {
   const [computerScore, setComputerScore]= useState(0)
   const [userScore, setUserScore]= useState(0)
   const [message, setMessage]= useState()
-  const [restart,setRestart] =  useState()
+  const [roundComplete, setRoundComplete] = useState(false);
+
   useEffect(() => {
   const ids = Array.from({ length: 10 }, () => Math.floor(Math.random() * 50) + 1);
 
@@ -33,7 +34,6 @@ function Fetchcard() {
   };
 
   fetchCards();
-  setRestart(fetchCards())
 }, []);
 
 useEffect(() => {
@@ -52,35 +52,43 @@ const removeCard = (name) => {
 
 const removeComputerCard = () => {
   setTimeout(() => {
-    const cardChoice = computerCard.shift();
-    setComputerChoice(cardChoice);
-    setComputerCard(prev => prev.filter(card => card.name !== cardChoice.name));
-  }, 2000);
+    setComputerCard(prev => {
+      const [firstCard, ...rest] = prev; 
+      setComputerChoice(firstCard);
+      return rest;
+    });
+  }, 0.500);
 };
 
+
 useEffect(() => {
-    if (pickedCard && computerChoice) {
-      if (pickedCard.value === computerChoice.value) {
-        setMessage("Draw - no winner");
-      } else if (pickedCard.value > computerChoice.value) {
-        setUserScore(prev => prev + 1);
-        setMessage("You won");
-      } else {
-        setComputerScore(prev => prev + 1);
-        setMessage("Computer won");
-      }
-      // Reset picked cards after delay for next round
-       setTimeout(() => {
-        setMessage(null);
-        
-      }, 2000);
+  if (pickedCard && computerChoice && !roundComplete) {
+    setRoundComplete(true); // 🔒 prevent re-triggering this effect
+
+    if (pickedCard.value === computerChoice.value) {
+      setMessage("Draw - no winner");
+    } else if (pickedCard.value > computerChoice.value) {
+      setUserScore(prev => prev + 1);
+      setMessage("You won");
+    } else {
+      setComputerScore(prev => prev + 1);
+      setMessage("Computer won");
     }
-  }, [pickedCard, computerChoice]);
+
+    setTimeout(() => {
+      setMessage(null);
+      setPickedCard(null);         // 👈 reset for next round
+      setComputerChoice(null);     // 👈 reset for next round
+      setRoundComplete(false);     // 🔓 unlock for next round
+    }, 2000);
+  }
+}, [pickedCard, computerChoice, roundComplete]);
+
  
   return (
     <div className='body'>
-      <div className='header'><button onClick={()=>restart} >pokemon Games</button></div>
-      <div>
+      <div className='header'><button >pokemon Games</button></div>
+      <div className='group'>
        {computerCard.map((card, index) => (
         <div key={index} className='cards'>
           <div className='item'>
@@ -104,7 +112,7 @@ useEffect(() => {
             <h5>Computer Score</h5>
             <h2>{computerScore}</h2>
           </div>
-          <div><h2>{message}</h2></div>
+          <div id='message'><h2>{message}</h2></div>
 
           <div>
             <h5>Your Score</h5>
@@ -119,9 +127,9 @@ useEffect(() => {
         </div>)}</div>
         
         </div>
-      <div>
+      <div className='group'>
       {userCard.map((card, index) => (
-        <div key={index} onClick={() =>{ removeCard(card.name)}} className='cards'>
+        <div key={index} onClick={() =>{ !pickedCard && removeCard(card.name)}} className='cards'>
           <div className='item'>
             <h6>{card.value}</h6>
             <img src={card.sprites.front_default}
